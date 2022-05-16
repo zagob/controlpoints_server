@@ -1,5 +1,8 @@
 import { inject, injectable } from "tsyringe";
-import { IPointsRepository } from "../../repositories/IPointsRepository";
+import {
+  findDateMonthParams,
+  IPointsRepository,
+} from "../../repositories/IPointsRepository";
 
 @injectable()
 class ListPointDateMonthUseCase {
@@ -8,8 +11,8 @@ class ListPointDateMonthUseCase {
     private pointsRepository: IPointsRepository
   ) {}
 
-  async execute(year: string, month: string, userId: string) {
-    return await this.pointsRepository.fintByMonth(year, month, userId);
+  async execute({ year, month, userId }: findDateMonthParams) {
+    return await this.pointsRepository.fintByMonth({ year, month, userId });
   }
 }
 

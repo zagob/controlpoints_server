@@ -1,7 +1,10 @@
 import { Point } from "@prisma/client";
 import { prisma } from "../../../../infra/database/prismaClient";
 import { ICreatePointDTO } from "../../dtos/ICreatePointDTO";
-import { IPointsRepository } from "../../repositories/IPointsRepository";
+import {
+  findDateMonthParams,
+  IPointsRepository,
+} from "../../repositories/IPointsRepository";
 
 class PointsRepository implements IPointsRepository {
   async create({
@@ -44,19 +47,34 @@ class PointsRepository implements IPointsRepository {
     return createPoint;
   }
 
-  async fintByMonth(year: string, month: string, userId: string): Promise<Point[]> {
-    const newDate = new Date(Number(year), Number(month), 31)
-    const dateMonth = await prisma.point.findMany({
+  async fintByMonth({
+    year,
+    month,
+    userId,
+  }: findDateMonthParams): Promise<Point[]> {
+    const numberYear = Number(year);
+    const numberMonth = Number(month);
+    const listDateMonth = await prisma.point.findMany({
       where: {
-        // userId: '',
+        userId: userId,
         selectedDate: {
-          gte: new Date(Number(year), Number(month), 1),
-          lte: new Date(newDate.getFullYear(), newDate.getMonth(), 31),
+          gte: new Date(numberYear, numberMonth - 1, 1),
+          lte: new Date(numberYear, numberMonth - 1, 31),
         },
       },
     });
 
-    return dateMonth;
+    return listDateMonth;
+  }
+
+  async findAllPoints(): Promise<Point[]> {
+    const findAll = await prisma.point.findMany({
+      where: {
+        userId: "1234",
+      },
+    });
+
+    return findAll;
   }
 }
 
