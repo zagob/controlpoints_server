@@ -5,6 +5,13 @@ export interface findDateMonthParams {
   year: string | undefined;
   month: string | undefined;
   userId: string | undefined;
+  perPage?: number;
+  page?: number;
+}
+
+export interface FindMonthParams {
+  totalPage: number;
+  listDateMonth: Point[]
 }
 
 interface IPointsRepository {
@@ -24,8 +31,11 @@ interface IPointsRepository {
     minutesReminder,
     definedStatus,
   }: ICreatePointDTO): Promise<Point>;
-  fintByMonth({ year, month, userId }: findDateMonthParams): Promise<Point[]>;
+  fintByMonth({ year, month, userId, perPage, page }: findDateMonthParams): Promise<FindMonthParams>;
+  findSelectedDate(userId: string, selectedDate: Date): Promise<Point | null>;
   findAllPoints(): Promise<Point[]>;
+  findPointById(id: string): Promise<Point | null>;
+  deletePointById(id: string): Promise<void>;
 }
 
 export { IPointsRepository };

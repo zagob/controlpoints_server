@@ -4,8 +4,15 @@ import { CreatePointUseCase } from "./CreatePointUseCase";
 
 class CreatePointController {
   async handle(request: Request, response: Response) {
-    const { userId, selectedDate, entryOne, exitOne, entryTwo, exitTwo } =
-      request.body;
+    const {
+      userId,
+      selectedDate,
+      entryOne,
+      exitOne,
+      entryTwo,
+      exitTwo,
+      isSimulation,
+    } = request.body;
 
     const createPointsUseCase = container.resolve(CreatePointUseCase);
 
@@ -16,6 +23,7 @@ class CreatePointController {
       exitOne,
       entryTwo,
       exitTwo,
+      isSimulation,
     });
 
     return response.json(result);

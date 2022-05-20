@@ -16,6 +16,7 @@ interface ICreatePointParams {
   exitOne: string;
   entryTwo: string;
   exitTwo: string;
+  isSimulation?: boolean;
 }
 
 @injectable()
@@ -34,6 +35,7 @@ class CreatePointUseCase {
     exitOne,
     entryTwo,
     exitTwo,
+    isSimulation = false,
   }: ICreatePointParams) {
     const totalTimeMinutes = 480;
     const entryOneDate = convertDataToParseISO(entryOne);
@@ -95,26 +97,6 @@ class CreatePointUseCase {
     };
 
     const returnObj = {
-      selectedDate,
-      entryOne,
-      exitOne,
-      entryTwo,
-      exitTwo,
-      totalTimeString,
-      totalTimeWork,
-      timeEntryOneAndExitOne,
-      timeExitOneAndEntryTwo,
-      timeExtryTwoAndExitTwo,
-      timeBonus,
-    };
-
-    const usersAlreadyExist = await this.usersRepository.findById(userId);
-
-    if (!usersAlreadyExist) {
-      throw new AppError("User not already exists");
-    }
-
-    await this.pointsRepository.create({
       definedStatus: timeBonus.definedStatus,
       entryOne,
       entryTwo,
@@ -130,7 +112,55 @@ class CreatePointUseCase {
       totalHours: totalTimeWork.totalHours,
       totalMinutes: totalTimeWork.totalMinutes,
       userId,
-    });
+    };
+    // const returnObj = {
+    //   selectedDate,
+    //   entryOne,
+    //   exitOne,
+    //   entryTwo,
+    //   exitTwo,
+    //   totalTimeString,
+    //   totalTimeWork,
+    //   timeEntryOneAndExitOne,
+    //   timeExitOneAndEntryTwo,
+    //   timeExtryTwoAndExitTwo,
+    //   timeBonus,
+    // };
+
+    const usersAlreadyExist = await this.usersRepository.findById(userId);
+
+    if (!usersAlreadyExist) {
+      throw new AppError("User not already exists");
+    }
+
+    const dateAlreadyExists = await this.pointsRepository.findSelectedDate(
+      userId,
+      selectedDate
+    );
+
+    if (dateAlreadyExists) {
+      throw new AppError("Date already exist");
+    }
+
+    if (!isSimulation) {
+      await this.pointsRepository.create({
+        definedStatus: timeBonus.definedStatus,
+        entryOne,
+        entryTwo,
+        exitOne,
+        exitTwo,
+        hoursReminder: timeBonus.valueHoursReminder,
+        minutesReminder: timeBonus.valueMinutesReminder,
+        reminderMinutes: totalTimeWork.reminderMinutes,
+        selectedDate,
+        timeAfternoon: timeExtryTwoAndExitTwo,
+        timeLunch: timeExitOneAndEntryTwo,
+        timeMorning: timeEntryOneAndExitOne,
+        totalHours: totalTimeWork.totalHours,
+        totalMinutes: totalTimeWork.totalMinutes,
+        userId,
+      });
+    }
 
     return returnObj;
   }

@@ -1,6 +1,4 @@
 import { inject, injectable } from "tsyringe";
-import { prisma } from "../../../../infra/database/prismaClient";
-import { AppError } from "../../../../shared/errors/AppError";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 
 interface ICreateUser {
@@ -19,8 +17,7 @@ export class CreateUserUseCase {
     const userExists = await this.usersRepository.findById(id);
 
     if (userExists) {
-      console.log('existe')
-      return null
+      return null;
     }
 
     const createUser = await this.usersRepository.create({ id, image, name });

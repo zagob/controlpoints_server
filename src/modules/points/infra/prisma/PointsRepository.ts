@@ -1,8 +1,10 @@
 import { Point } from "@prisma/client";
 import { prisma } from "../../../../infra/database/prismaClient";
+import { AppError } from "../../../../shared/errors/AppError";
 import { ICreatePointDTO } from "../../dtos/ICreatePointDTO";
 import {
   findDateMonthParams,
+  FindMonthParams,
   IPointsRepository,
 } from "../../repositories/IPointsRepository";
 
@@ -51,10 +53,13 @@ class PointsRepository implements IPointsRepository {
     year,
     month,
     userId,
-  }: findDateMonthParams): Promise<Point[]> {
+    perPage = 5,
+    page = 1,
+  }: findDateMonthParams): Promise<FindMonthParams> {
     const numberYear = Number(year);
     const numberMonth = Number(month);
-    const listDateMonth = await prisma.point.findMany({
+
+    const listTotalNumberResult = await prisma.point.count({
       where: {
         userId: userId,
         selectedDate: {
@@ -64,17 +69,69 @@ class PointsRepository implements IPointsRepository {
       },
     });
 
-    return listDateMonth;
-  }
-
-  async findAllPoints(): Promise<Point[]> {
-    const findAll = await prisma.point.findMany({
+    const listDateMonth = await prisma.point.findMany({
+      take: perPage,
+      skip: perPage * (page - 1),
       where: {
-        userId: "1234",
+        userId: userId,
+        selectedDate: {
+          gte: new Date(numberYear, numberMonth - 1, 1),
+          lte: new Date(numberYear, numberMonth - 1, 31),
+        },
+      },
+      orderBy: {
+        selectedDate: "desc",
       },
     });
 
+    const formatListDateMonth = {
+      totalPage: Math.ceil(listTotalNumberResult / perPage),
+      listDateMonth,
+    };
+
+    return formatListDateMonth;
+  }
+
+  async findSelectedDate(
+    userId: string,
+    selectedDate: Date
+  ): Promise<Point | null> {
+    const findDate = await prisma.point.findFirst({
+      where: {
+        userId: userId,
+        selectedDate,
+      },
+    });
+
+    return findDate;
+  }
+
+  async findAllPoints(): Promise<Point[]> {
+    const findAll = await prisma.point.findMany();
+
     return findAll;
+  }
+
+  async findPointById(id: string): Promise<Point | null> {
+    const findPointById = await prisma.point.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!findPointById) {
+      throw new AppError("Point undefined!");
+    }
+
+    return findPointById;
+  }
+
+  async deletePointById(id: string): Promise<void> {
+    await prisma.point.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
 

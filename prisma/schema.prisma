@@ -24,8 +24,8 @@ enum PointStatus {
 }
 
 model Point {
-  id              String      @id @default(uuid())
-  selectedDate    DateTime    @unique
+  id              String   @id @default(uuid())
+  selectedDate    DateTime
   entryOne        String
   exitOne         String
   entryTwo        String
