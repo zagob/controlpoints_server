@@ -70,8 +70,8 @@ class PointsRepository implements IPointsRepository {
     });
 
     const listDateMonth = await prisma.point.findMany({
-      take: perPage,
-      skip: perPage * (page - 1),
+      // take: perPage,
+      // skip: perPage * (page - 1),
       where: {
         userId: userId,
         selectedDate: {
@@ -86,10 +86,35 @@ class PointsRepository implements IPointsRepository {
 
     const formatListDateMonth = {
       totalPage: Math.ceil(listTotalNumberResult / perPage),
+      totalCount: listTotalNumberResult,
       listDateMonth,
     };
 
     return formatListDateMonth;
+  }
+
+  async getDateMonth(
+    userId: string,
+    year: string,
+    month: string
+  ): Promise<Date[]> {
+    const numberYear = Number(year);
+    const numberMonth = Number(month);
+
+    const listDateMonthSelected = await prisma.point.findMany({
+      where: {
+        userId: userId,
+        selectedDate: {
+          gte: new Date(numberYear, numberMonth - 1, 1),
+          lte: new Date(numberYear, numberMonth - 1, 31),
+        },
+      },
+      // select: {
+      //   selectedDate: true,
+      // },
+    });
+
+    return listDateMonthSelected.map(item => item.selectedDate)
   }
 
   async findSelectedDate(

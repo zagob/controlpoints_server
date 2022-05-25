@@ -36,6 +36,7 @@ interface IPointsRepository {
   findAllPoints(): Promise<Point[]>;
   findPointById(id: string): Promise<Point | null>;
   deletePointById(id: string): Promise<void>;
+  getDateMonth(userId: string, year: string, month: string): Promise<Date[]>
 }
 
 export { IPointsRepository };
