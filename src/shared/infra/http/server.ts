@@ -3,8 +3,8 @@ import "reflect-metadata";
 import "express-async-errors";
 import "../container";
 import cors from "cors";
-import { routes } from "./routes";
 import { AppError } from "../../errors/AppError";
+import { routes } from "./routes/index";
 
 const app = express();
 
@@ -26,4 +26,4 @@ app.use(
   }
 );
 
-app.listen(3333, () => console.log("Server online..."));
+app.listen(process.env.PORT || 3333, () => console.log("Server online..."));

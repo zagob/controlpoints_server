@@ -1,0 +1,24 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.pointsRoutes = void 0;
+const express_1 = require("express");
+const CreatePointController_1 = require("../../../../modules/points/useCases/createPoint/CreatePointController");
+const DeletePointWithIdController_1 = require("../../../../modules/points/useCases/deletePointWithId/DeletePointWithIdController");
+const GetDateMonthSelectedController_1 = require("../../../../modules/points/useCases/getDateMonthSelected/GetDateMonthSelectedController");
+const ListAllPointsController_1 = require("../../../../modules/points/useCases/listAllPoints/ListAllPointsController");
+const ListPointDateMonthController_1 = require("../../../../modules/points/useCases/listPointsDateMonth/ListPointDateMonthController");
+const ListPointWithUserIdController_1 = require("../../../../modules/points/useCases/listPointWithUserId/ListPointWithUserIdController");
+exports.pointsRoutes = (0, express_1.Router)();
+const createPoint = new CreatePointController_1.CreatePointController();
+const listPointDateMonth = new ListPointDateMonthController_1.ListPointDateMonthController();
+const listAllPoints = new ListAllPointsController_1.ListAllPointsController();
+const listPointWithId = new ListPointWithUserIdController_1.ListPointWithIdController();
+const deletePointWithId = new DeletePointWithIdController_1.DeletePointWithIdController();
+const getDateMonthSelected = new GetDateMonthSelectedController_1.GetDateMonthSelectedController();
+exports.pointsRoutes.post("/create", createPoint.handle);
+exports.pointsRoutes.get("/list/:userId", listPointDateMonth.handle);
+exports.pointsRoutes.get("/listAll", listAllPoints.handle);
+exports.pointsRoutes.get("/listOne/:id", listPointWithId.handle);
+exports.pointsRoutes.delete("/delete/:id", deletePointWithId.handle);
+exports.pointsRoutes.get("/getDate/:userId", getDateMonthSelected.handle);
+//# sourceMappingURL=points.routes.js.map

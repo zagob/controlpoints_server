@@ -4,7 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/shared/infra/http/server.ts"
+    "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/shared/infra/http/server.ts",
+    "build": "tsc",
+    "start": "node dist/shared/infra/http/server.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
