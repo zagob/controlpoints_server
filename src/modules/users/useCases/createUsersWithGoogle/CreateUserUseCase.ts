@@ -1,4 +1,5 @@
 import { inject, injectable } from "tsyringe";
+import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
 
 interface ICreateUser {
@@ -13,7 +14,7 @@ export class CreateUserUseCase {
     @inject("UsersRepository")
     private usersRepository: IUsersRepository
   ) {}
-  async execute({ id, image, name }: ICreateUser): Promise<ICreateUser | null> {
+  async execute({ id, image, name }: ICreateUser): Promise<ICreateUserDTO | null> {
     const userExists = await this.usersRepository.findById(id);
 
     if (userExists) {
