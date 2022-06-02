@@ -65,7 +65,7 @@ class PointsRepository implements IPointsRepository {
         userId: userId,
         selectedDate: {
           gte: dayjs(`${year}-${month}`).format(),
-          lte: dayjs(`${year}-${month}-${numberOfDays}`).format(),
+          lte: dayjs(`${year}-${month}-${numberOfDays + 1}`).format(),
         },
       },
       orderBy: {

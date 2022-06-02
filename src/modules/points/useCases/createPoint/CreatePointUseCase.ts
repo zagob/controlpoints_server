@@ -113,19 +113,6 @@ class CreatePointUseCase {
       totalMinutes: totalTimeWork.totalMinutes,
       userId,
     };
-    // const returnObj = {
-    //   selectedDate,
-    //   entryOne,
-    //   exitOne,
-    //   entryTwo,
-    //   exitTwo,
-    //   totalTimeString,
-    //   totalTimeWork,
-    //   timeEntryOneAndExitOne,
-    //   timeExitOneAndEntryTwo,
-    //   timeExtryTwoAndExitTwo,
-    //   timeBonus,
-    // };
 
     const usersAlreadyExist = await this.usersRepository.findById(userId);
 
