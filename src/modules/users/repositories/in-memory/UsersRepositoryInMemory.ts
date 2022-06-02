@@ -26,6 +26,12 @@ class UsersRepositoryInMemory implements IUsersRepository {
 
     return user;
   }
+
+  async listAllUser(): Promise<User[]> {
+    const users = this.users.map((user) => user);
+
+    return users;
+  }
 }
 
 export { UsersRepositoryInMemory };
