@@ -16,7 +16,7 @@ class UsersRepository implements IUsersRepository {
     return createUser;
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<User | undefined> {
     const findByIdUser = await prisma.user.findFirst({
       where: {
         id: {
@@ -26,7 +26,17 @@ class UsersRepository implements IUsersRepository {
       },
     });
 
+    if (findByIdUser === null) {
+      return undefined;
+    }
+
     return findByIdUser;
+  }
+
+  async listAllUser(): Promise<User[]> {
+    const users = await prisma.user.findMany();
+
+    return users;
   }
 }
 

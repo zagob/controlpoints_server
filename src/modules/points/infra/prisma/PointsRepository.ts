@@ -2,6 +2,8 @@ import { Point } from "@prisma/client";
 import { prisma } from "../../../../infra/database/prismaClient";
 import { AppError } from "../../../../shared/errors/AppError";
 import { ICreatePointDTO } from "../../dtos/ICreatePointDTO";
+import dayjs from "dayjs";
+
 import {
   findDateMonthParams,
   FindMonthParams,
@@ -53,30 +55,17 @@ class PointsRepository implements IPointsRepository {
     year,
     month,
     userId,
-    perPage = 5,
-    page = 1,
-  }: findDateMonthParams): Promise<FindMonthParams> {
+  }: findDateMonthParams): Promise<Point[]> {
     const numberYear = Number(year);
     const numberMonth = Number(month);
-
-    const listTotalNumberResult = await prisma.point.count({
-      where: {
-        userId: userId,
-        selectedDate: {
-          gte: new Date(numberYear, numberMonth - 1, 1),
-          lte: new Date(numberYear, numberMonth - 1, 31),
-        },
-      },
-    });
+    const numberOfDays = new Date(numberYear, numberMonth, 0).getDate();
 
     const listDateMonth = await prisma.point.findMany({
-      // take: perPage,
-      // skip: perPage * (page - 1),
       where: {
         userId: userId,
         selectedDate: {
-          gte: new Date(numberYear, numberMonth - 1, 1),
-          lte: new Date(numberYear, numberMonth - 1, 31),
+          gte: dayjs(`${year}-${month}`).format(),
+          lte: dayjs(`${year}-${month}-${numberOfDays}`).format(),
         },
       },
       orderBy: {
@@ -84,13 +73,7 @@ class PointsRepository implements IPointsRepository {
       },
     });
 
-    const formatListDateMonth = {
-      totalPage: Math.ceil(listTotalNumberResult / perPage),
-      totalCount: listTotalNumberResult,
-      listDateMonth,
-    };
-
-    return formatListDateMonth;
+    return listDateMonth;
   }
 
   async getDateMonth(
@@ -114,7 +97,7 @@ class PointsRepository implements IPointsRepository {
       // },
     });
 
-    return listDateMonthSelected.map(item => item.selectedDate)
+    return listDateMonthSelected.map((item) => item.selectedDate);
   }
 
   async findSelectedDate(

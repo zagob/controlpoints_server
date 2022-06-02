@@ -3,10 +3,16 @@ import { container } from "tsyringe";
 import { findDateMonthParams } from "../../repositories/IPointsRepository";
 import { ListPointDateMonthUseCase } from "./ListPointDateMonthUseCase";
 
+interface IRequestQuery {
+  year: string;
+  month: string;
+}
+
 class ListPointDateMonthController {
   async handle(request: Request, response: Response) {
     const { userId } = request.params;
-    const { year, month, perPage, page } = request.query as any;
+    const year = request.query.year as string;
+    const month = request.query.month as string;
 
     const listPointsDateMonth = container.resolve(ListPointDateMonthUseCase);
 
@@ -14,8 +20,6 @@ class ListPointDateMonthController {
       year,
       month,
       userId,
-      perPage,
-      page,
     });
 
     return response.json(result);

@@ -11,13 +11,11 @@ class ListPointDateMonthUseCase {
     private pointsRepository: IPointsRepository
   ) {}
 
-  async execute({ year, month, userId, perPage, page }: findDateMonthParams) {
+  async execute({ year, month, userId }: findDateMonthParams) {
     return await this.pointsRepository.fintByMonth({
       year,
       month,
       userId,
-      perPage,
-      page,
     });
   }
 }
