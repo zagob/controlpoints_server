@@ -4,6 +4,8 @@ import { IPointsRepository } from "../../../modules/points/repositories/IPointsR
 import { UsersRepository } from "../../../modules/users/infra/prisma/UsersRepository";
 import { IUsersRepository } from "../../../modules/users/repositories/IUsersRepository";
 
+import './Providers'
+
 container.registerSingleton<IUsersRepository>(
   "UsersRepository",
   UsersRepository

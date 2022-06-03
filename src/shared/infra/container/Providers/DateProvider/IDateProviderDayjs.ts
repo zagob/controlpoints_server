@@ -1,0 +1,5 @@
+interface IDateProviderDayjs {
+    
+}
+
+export { IDateProviderDayjs };
