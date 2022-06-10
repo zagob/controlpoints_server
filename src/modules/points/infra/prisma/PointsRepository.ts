@@ -83,18 +83,16 @@ class PointsRepository implements IPointsRepository {
   ): Promise<Date[]> {
     const numberYear = Number(year);
     const numberMonth = Number(month);
+    const numberOfDays = new Date(numberYear, numberMonth, 0).getDate();
 
     const listDateMonthSelected = await prisma.point.findMany({
       where: {
         userId: userId,
         selectedDate: {
-          gte: new Date(numberYear, numberMonth - 1, 1),
-          lte: new Date(numberYear, numberMonth - 1, 31),
+          gte: dayjs(`${year}-${month}`).format(),
+          lte: dayjs(`${year}-${month}-${numberOfDays + 1}`).format(),
         },
       },
-      // select: {
-      //   selectedDate: true,
-      // },
     });
 
     return listDateMonthSelected.map((item) => item.selectedDate);
