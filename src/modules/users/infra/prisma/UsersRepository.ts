@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { BankBalanceHours, User } from "@prisma/client";
 import { prisma } from "../../../../infra/database/prismaClient";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
 import { IUsersRepository } from "../../repositories/IUsersRepository";
